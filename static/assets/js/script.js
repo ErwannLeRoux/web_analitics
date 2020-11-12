@@ -76,26 +76,7 @@ $(document).ready(function() {
             link.attr("d", linkArc);
             node.attr("transform", d => `translate(${d.x},${d.y})`);
         });
-
-
-        d3.select(".node", function (obj) {
-            console.log(obj)
-        })
-
-
-        nodes.forEach(function(obj,i) {
-            d3.select("#d" + obj.dep)
-                .attr("class", function(d) {return "department q" + quantile(+obj.value) + "-9"; })
-                .on("click", function(d) {
-                    window.location.href = "/departments/"+obj.dep
-                })
-                .on("mouseover", function(d) {
-                    console.log(d)
-                })
-
-        });*/
-
-
+        
         //invalidation.then(() => simulation.stop());
 
 
