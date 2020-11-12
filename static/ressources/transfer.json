@@ -1,0 +1,8 @@
+[
+  {"source":"2","target":"1","type":"licensing"},
+  {"source":"3","target":"1","type":"licensing"},
+  {"source":"3","target":"2","type":"licensing"},
+  {"source":"4","target":"1","type":"licensing"},
+  {"source":"4","target":"2","type":"licensing"},
+  {"source":"4","target":"3","type":"licensing"}
+]

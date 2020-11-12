@@ -1,0 +1,15 @@
+.figure {
+    width: 800px;
+    height: 800px;
+    border: solid black 1px;
+}
+
+aside {
+    border: solid black 1px;
+    width: 100%;
+}
+
+main {
+    display: flex;
+}
+
