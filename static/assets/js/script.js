@@ -2,17 +2,14 @@ $(document).ready(function() {
     let height = 600
     let width = 600
 
-    d3.json("static/ressources/generate.json").then(function(li) {
-        let types = Array.from(new Set(li.map(d => d.type)))
+    let edges_loading= d3.json("static/ressources/graph_edges.json")
+    let nodes_loading = d3.json("static/ressources/graph_nodes.json")
 
-        let data = ({nodes: Array.from(new Set(li.flatMap(l => [l.source, l.target])), id => ({id})), li})
-
+    Promise.all([edges_loading, nodes_loading]).then((data) => {
+        let links = data[0]
+        let nodes = data[1]
+        let types = Array.from(new Set(links.map(d => d.type)))
         let color = d3.scaleOrdinal(types, d3.schemeCategory10)
-
-        let height = 600
-
-        const links = data.li.map(d => Object.create(d));
-        const nodes = data.nodes.map(d => Object.create(d));
 
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id))
@@ -45,21 +42,28 @@ $(document).ready(function() {
             .selectAll("path")
             .data(links)
             .join("path")
+            .attr("class", function(d) {
+              //console.log(d)
+            })
             .attr("stroke", d => color(d.type))
-            .attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`);
+            // used for oriented graphs
+            //.attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`);
 
         const node = svg.append("g")
             .attr("fill", "currentColor")
             .attr("stroke-linecap", "round")
             .attr("stroke-linejoin", "round")
+            .attr("class", "cursor")
             .selectAll("g")
             .data(nodes)
             .join("g")
-            .call(drag(simulation));
+              .on("mouseover", function(d) {
+                $(".infos").text(JSON.stringify(d))
+              })
+              .call(drag(simulation));
 
         node.append("circle")
             .attr("stroke", "white")
-            .attr("class", "node")
             .attr("stroke-width", 1.5)
             .attr("r", 4);
 
@@ -76,12 +80,7 @@ $(document).ready(function() {
             link.attr("d", linkArc);
             node.attr("transform", d => `translate(${d.x},${d.y})`);
         });
-        
-        //invalidation.then(() => simulation.stop());
-
-
-
-    })
+    }).catch(console.error)
 
     function linkArc(d) {
         const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
@@ -119,7 +118,7 @@ $(document).ready(function() {
         console.log(e.target.files[0])
     })
 
-    gmlToJson()
+  //  gmlToJson()
 
 });
 

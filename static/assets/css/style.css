@@ -1,7 +1,11 @@
 .figure {
-    width: 800px;
-    height: 800px;
+    width: 600px;
+    height: 600px;
     border: solid black 1px;
+}
+
+.cursor {
+  cursor: pointer;
 }
 
 aside {
@@ -9,7 +13,8 @@ aside {
     width: 100%;
 }
 
+
+
 main {
     display: flex;
 }
-

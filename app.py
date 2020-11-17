@@ -13,15 +13,34 @@ app = Flask(__name__, template_folder='templates')
 def index():
     filename="karate"
     graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+filename+".gml", label=None)
-    jsonFile = []
-    for item in graph.edges:
-        jsonFile.append({
-            'source': item[0],
-            'target' : item[1]
-        })
+    edgesFile = []
+    nodesFile = []
 
-    with open(os.getcwd()+"\\static\\ressources\\generate.json", 'w') as outfile:
-        json.dump(jsonFile, outfile)
+    centrality_dict = getDegreeCentrality(graph)
+    centrality_list = list(centrality_dict.values())
+
+    i = 0
+    for item in graph.edges:
+        edgesFile.append({
+            'source': item[0],
+            'target' : item[1],
+            'type': 'type'
+        })
+        i = i +1
+
+    i = 0
+    for item in graph.nodes:
+        nodesFile.append({
+            'id': item,
+            'centrality' : centrality_list[0]
+        })
+        i = i + 1
+
+    with open(os.getcwd()+"\\static\\ressources\\graph_nodes.json", 'w') as outfile:
+        json.dump(nodesFile, outfile)
+
+    with open(os.getcwd()+"\\static\\ressources\\graph_edges.json", 'w') as outfile:
+        json.dump(edgesFile, outfile)
 
     return render_template('index.html', data="")
 
