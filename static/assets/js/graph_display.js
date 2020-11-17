@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     let general_informations = d3.json(`/static/ressources/${graph_id}/graph_info.json`)
     let edges_loading= d3.json(`/static/ressources/${graph_id}/graph_edges.json`)
-    let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes.json`)
+    let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes_5.json`)
 
     general_informations.then(function(data) {
       $(".nbNodes").text(`Number of nodes : ${data.nb_nodes}`)
@@ -82,6 +82,7 @@ $(document).ready(function() {
               //.call(drag(simulation));
 
         node.append("circle")
+            .attr("fill", d => color(d.cluster))
             .attr("stroke", "white")
             .attr("stroke-width", 1.5)
             .attr("r", 4);

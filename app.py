@@ -134,6 +134,65 @@ def file_upload():
         with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_edges.json", 'w') as outfile:
             json.dump(edgesFile, outfile)
 
+        ### Generating clusters ###
+
+        k = 4 #nb cluster
+
+        #Cluster set generation with Girman Newman Algo:
+        clusteringSet, perf = girvanNewman(graph,k)
+
+        setsInfos = {
+            "girvan_newman_perf" : perf,
+            "sets" :[]
+        }
+
+        #For each set construct the json file.
+        setId = 2
+        for set in clusteringSet:
+            clustersInfo = {
+                "nb_clust" : setId,
+                "clusters" : [],
+            }
+
+            clustFile = [] # json vide
+            clustId = 1 # set Id
+            #forEach cluster look graph node and add it if it's in the cluster.
+            for cluster in set:
+                subgraph = graph.subgraph(list(cluster))
+                clustersInfo["clusters"].append({
+                    "id" : clustId,
+                    "intra-density" : getNetworkDensity(subgraph),
+                    "inter-density" : getInterDensity(subgraph, graph),
+                    "most-important-node" : getMostImportantNode(subgraph)
+                })
+
+                for i in range(0, len(graph.nodes)):
+                    id = list(graph.nodes)[i]
+                    try:
+                        label = graph.nodes[i]['label']
+                    except:
+                        label = id
+                    if(id in list(subgraph.nodes)):
+                        clustFile.append({
+                            'id': id,
+                            'nom' : label,
+                            'cluster' : clustId,
+                            'degree_centrality': degree_centrality[id],
+                            'betweenness_centrality': betweenness_centrality[id],
+                            'closeness_centrality': closeness_centrality[id],
+                            'in_degree': in_degree[id],
+                            'out_degree': out_degree[id],
+                        })
+                clustId += 1
+            setsInfos["sets"].append(clustersInfo)
+
+            with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes_"+str(setId)+".json", 'w') as outfile:
+                json.dump(clustFile, outfile)
+            setId += 1
+
+            with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\clusters_info.json", 'w') as outfile:
+                json.dump(setsInfos, outfile)
+
         return redirect("/graph/"+dir_name, code=200)
 
 
