@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, redirect, render_template, jsonify
 import requests
 from flask import request
 import json
@@ -6,43 +6,76 @@ import os
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import uuid
 
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/', methods=["GET"])
 def index():
-    filename="karate"
-    graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+filename+".gml", label=None)
-    edgesFile = []
-    nodesFile = []
+    data = {
+        "list" : os.listdir('./static/ressources/'),
+    }
+    return render_template('index.html', data=data)
 
-    centrality_dict = getDegreeCentrality(graph)
-    centrality_list = list(centrality_dict.values())
+@app.route('/graph/<graph_id>', methods=["GET"])
+def load_graph(graph_id):
+    return render_template('graph_display.html', data=graph_id)
 
-    i = 0
-    for item in graph.edges:
-        edgesFile.append({
-            'source': item[0],
-            'target' : item[1],
-            'type': 'type'
-        })
-        i = i +1
 
-    i = 0
-    for item in graph.nodes:
-        nodesFile.append({
-            'id': item,
-            'centrality' : centrality_list[0]
-        })
-        i = i + 1
+@app.route('/upload_file', methods=["POST"])
+def file_upload():
+    if request.method == 'POST':
+        f = request.files['file_field']
 
-    with open(os.getcwd()+"\\static\\ressources\\graph_nodes.json", 'w') as outfile:
-        json.dump(nodesFile, outfile)
+        # read gml file
+        file_text = f.read().decode("utf-8")
 
-    with open(os.getcwd()+"\\static\\ressources\\graph_edges.json", 'w') as outfile:
-        json.dump(edgesFile, outfile)
+        dir_name = str(uuid.uuid4().hex)
+        path = os.getcwd()+"\\static\\ressources\\"+dir_name
+        try:
+            os.makedirs(path)
+        except OSError:
+            print ("Creation of the directory %s failed" % path)
+        else:
+            print ("Successfully created the directory %s" % path)
 
-    return render_template('index.html', data="")
+        # store gml file
+        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\gml_file.gml", 'w') as outfile:
+            outfile.write(file_text)
+
+        graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\gml_file.gml", label=None)
+        edgesFile = []
+        nodesFile = []
+
+        centrality_dict = getDegreeCentrality(graph)
+        centrality_list = list(centrality_dict.values())
+
+        i = 0
+        for item in graph.edges:
+            edgesFile.append({
+                'source': item[0],
+                'target' : item[1],
+                'type': 'type'
+            })
+            i = i +1
+
+        i = 0
+        for item in graph.nodes:
+            nodesFile.append({
+                'id': item,
+                'centrality' : centrality_list[0]
+            })
+            i = i + 1
+
+
+        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes.json", 'w') as outfile:
+            json.dump(nodesFile, outfile)
+
+        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_edges.json", 'w') as outfile:
+            json.dump(edgesFile, outfile)
+
+        return redirect("/graph/"+dir_name, code=200)
+
 
 #Utilities Methods
 def getDegreeCentrality(g):

@@ -1,9 +1,11 @@
 $(document).ready(function() {
-    let height = 600
-    let width = 600
+    let height = 6000
+    let width = 6000
 
-    let edges_loading= d3.json("static/ressources/graph_edges.json")
-    let nodes_loading = d3.json("static/ressources/graph_nodes.json")
+    let graph_id = window.location.pathname.split("/")[2]
+
+    let edges_loading= d3.json(`/static/ressources/${graph_id}/graph_edges.json`)
+    let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes.json`)
 
     Promise.all([edges_loading, nodes_loading]).then((data) => {
         let links = data[0]
@@ -80,6 +82,40 @@ $(document).ready(function() {
             link.attr("d", linkArc);
             node.attr("transform", d => `translate(${d.x},${d.y})`);
         });
+
+        let svg_dom = $("svg")
+
+        svg_dom.bind('mousewheel DOMMouseScroll', function(event)
+        {
+          let viewBox_values = svg_dom.attr("viewBox").split(",")
+
+          if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+            // scroll up
+            let a = parseInt(viewBox_values[0]) + 250
+            let b = parseInt(viewBox_values[1]) + 250
+            let c = parseInt(viewBox_values[2]) - 500
+            let d = parseInt(viewBox_values[3]) - 500
+            if(c && d >= 500) {
+              svg_dom.attr("viewBox",`${a}, ${b}, ${c}, ${d}`)
+            }
+          }
+          else {
+            // scroll down
+            let a = parseInt(viewBox_values[0]) - 250
+            let b = parseInt(viewBox_values[1]) - 250
+            let c = parseInt(viewBox_values[2]) + 500
+            let d = parseInt(viewBox_values[3]) + 500
+            if(c && d >= 500) {
+              svg_dom.attr("viewBox",`${a}, ${b}, ${c}, ${d}`)
+            }
+
+          }
+
+        })
+
+
+
+
     }).catch(console.error)
 
     function linkArc(d) {
@@ -118,7 +154,6 @@ $(document).ready(function() {
         console.log(e.target.files[0])
     })
 
-  //  gmlToJson()
 
 });
 
