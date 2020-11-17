@@ -8,6 +8,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import uuid
+import itertools
+import time
 
 app = Flask(__name__, template_folder='templates')
 
@@ -69,31 +71,64 @@ def file_upload():
             outfile.write(file_text)
 
         graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\gml_file.gml", label=None)
-        edgesFile = []
+
         nodesFile = []
+        edgesFile = []
 
-        centrality_dict = getDegreeCentrality(graph)
-        centrality_list = list(centrality_dict.values())
+        ### Informations and computing relative to edges ###
+        edgesBetweenness = getEdgesBetweenness(graph)
 
-        i = 0
-        for item in graph.edges:
+        for edge in graph.edges:
             edgesFile.append({
-                'source': item[0],
-                'target' : item[1],
+                'source': edge[0],
+                'target' : edge[1],
+                'edges_betweenness' : edgesBetweenness[edge],
                 'type': 'type'
             })
-            i = i +1
 
-        i = 0
-        for item in graph.nodes:
+        ### Informations and computing relative to nodes ###
+
+        # degree_centrality
+        degree_centrality = getDegreeCentrality(graph)
+        # betweenness_centrality
+        betweenness_centrality = getBetweenneessCentrality(graph)
+        # closeness_centrality
+        closeness_centrality = getClosenessCentrality(graph)
+        # in_degree
+        in_degree = getInDegree(graph)
+        # out_degree
+        out_degree = getOutDegree(graph)
+
+        for i in range(0, len(graph.nodes)):
+            id = list(graph.nodes)[i]
+            try:
+                label = graph.nodes[i]['label']
+            except:
+                label = id
+
             nodesFile.append({
-                'id': item,
-                'centrality' : centrality_list[0]
+                'id': id,
+                'nom' : label,
+                'degree_centrality': degree_centrality[id],
+                'betweenness_centrality': betweenness_centrality[id],
+                'closeness_centrality': closeness_centrality[id],
+                'in_degree': in_degree[id],
+                'out_degree': out_degree[id],
             })
-            i = i + 1
 
+        ### General informations about graph ###
 
-        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes.json", 'w') as outfile:
+        graphFile = {
+            "nb_nodes" : getNbNodes(graph),
+            "nb_edges" : getNbEdges(graph),
+            "density" : getNetworkDensity(graph),
+            "avg_path_lenght" : getNetworkAvgPathLength(graph)
+        }
+
+        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_info.json", 'w') as outfile:
+            json.dump(graphFile, outfile)
+
+        with open(os.getcwd()+"\\static\\ressources/"+dir_name+"\\graph_nodes.json", 'w') as outfile:
             json.dump(nodesFile, outfile)
 
         with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_edges.json", 'w') as outfile:
@@ -102,7 +137,15 @@ def file_upload():
         return redirect("/graph/"+dir_name, code=200)
 
 
-#Utilities Methods
+def getNbNodes(g):
+    return len(list(g.nodes))
+
+def getNbEdges(g):
+    return len(list(g.edges))
+
+def getEdgesBetweenness(g):
+    return nx.edge_betweenness_centrality(g,k=None, normalized=True, weight=None, seed=None)
+
 def getDegreeCentrality(g):
     return nx.degree_centrality(g)
 
@@ -131,29 +174,11 @@ def getNetworkAvgPathLength(g):
     if nx.is_connected(g) :
         return nx.average_shortest_path_length(g, weight=None)
     else:
-        tab_average_shortest_path_length = []
-        for comp in nx.connected_components(g):
-            for C in (g.subgraph(comp).copy()):
-                tab_average_shortest_path_length = nx.average_shortest_path_length(C)
-        return np.mean(tab_average_shortest_path_length)
-
-def getInterDensity(subgraph, graph):
-    nb_inter=0
-    nbc=len(subgraph.nodes)
-    nb = len(graph.nodes)
-    for edge in graph.edges:
-        if((edge[0] in list(subgraph.nodes) and edge[1] not in list(subgraph.nodes)) or (edge[1] in list(subgraph.nodes) and edge[0] not in list(subgraph.nodes))):
-            nb_inter+=1
-    return nb_inter/(nbc*(nb-nbc))
-
-def getMostImportantNode(subgraph):
-    max = 0
-    max_id = 0
-    for couple in subgraph.degree:
-        if(couple[1] > max):
-            max = couple[1]
-            max_id = couple[0]
-    return max_id
+        tab = []
+        for c in nx.algorithms.connected_components(g):
+            C = g.subgraph(c).copy()
+            tab.append(nx.average_shortest_path_length(C))
+        return np.mean(tab)
 
 def getOutDegree(g):
     res=[]
@@ -173,6 +198,36 @@ def getInDegree(g):
 
 def getNetworkDensity(g):
     return nx.density(g)
+
+def girvanNewman(graph, k):
+    t1 = time.time()
+    comp = community.girvan_newman(graph)
+    res =[]
+    for communities in itertools.islice(comp, k): ## prend seulement les k itérations
+        res.append(communities)
+    t2 = time.time()
+    girvanPerf = t2 - t1
+    return res, girvanPerf
+
+def getInterDensity(subgraph, graph):
+    nb_inter=0
+    nbc=len(subgraph.nodes)
+    nb = len(graph.nodes)
+    for edge in graph.edges:
+        if((edge[0] in list(subgraph.nodes) and edge[1] not in list(subgraph.nodes))
+            or (edge[1] in list(subgraph.nodes) and edge[0] not in list(subgraph.nodes))):
+            nb_inter+=1
+    return nb_inter/(nbc*(nb-nbc))
+
+def getMostImportantNode(subgraph):
+    max = 0
+    max_id = 0
+    for couple in subgraph.degree:
+        if(couple[1] >= max):
+            max = couple[1]
+            max_id = couple[0]
+    return max_id
+
 
 
 if __name__ == "__main__":

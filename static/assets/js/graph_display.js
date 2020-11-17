@@ -4,8 +4,16 @@ $(document).ready(function() {
 
     let graph_id = window.location.pathname.split("/")[2]
 
+    let general_informations = d3.json(`/static/ressources/${graph_id}/graph_info.json`)
     let edges_loading= d3.json(`/static/ressources/${graph_id}/graph_edges.json`)
     let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes.json`)
+
+    general_informations.then(function(data) {
+      $(".nbNodes").text(`Number of nodes : ${data.nb_nodes}`)
+      $(".nbEdges").text(`Number of edges : ${data.nb_edges}`)
+      $(".graphDensity").text(`Graph density : ${data.density}`)
+      $(".averagePathLength").text(`Average path length : ${data.avg_path_lenght}`)
+    })
 
     Promise.all([edges_loading, nodes_loading]).then((data) => {
         let links = data[0]
@@ -48,6 +56,12 @@ $(document).ready(function() {
               //console.log(d)
             })
             .attr("stroke", d => color(d.type))
+            .on("mouseover", function(d) {
+              $(".infos-edges").find("span").text(JSON.stringify(d))
+            })
+            .on("mouseleave", function(d) {
+              $(".infos-edges").find("span").text("")
+            })
             // used for oriented graphs
             //.attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`);
 
@@ -60,7 +74,10 @@ $(document).ready(function() {
             .data(nodes)
             .join("g")
               .on("mouseover", function(d) {
-                $(".infos").text(JSON.stringify(d))
+                $(".infos").find("span").text(JSON.stringify(d))
+              })
+              .on("mouseleave", function(d) {
+                $(".infos").find("span").text("")
               })
               //.call(drag(simulation));
 
@@ -91,6 +108,7 @@ $(document).ready(function() {
 
         $(".figure").mousedown(function(e) {
             isDragging = true
+            $(".figure").css("cursor", "grab")
             x = e.clientX
             y = e.clientY
         })
@@ -111,8 +129,8 @@ $(document).ready(function() {
         .mouseup(function() {
             let wasDragging = isDragging
             isDragging = false
-            if (!wasDragging) {
-                console.log("fini !")
+            if (wasDragging) {
+                $(".figure").css("cursor", "")
             }
         })
 
@@ -135,10 +153,10 @@ $(document).ready(function() {
 
           if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
             // scroll up
-            let a = parseInt(viewBox_values[0]) + 250
-            let b = parseInt(viewBox_values[1]) + 250
-            let c = parseInt(viewBox_values[2]) - 500
-            let d = parseInt(viewBox_values[3]) - 500
+            let a = parseInt(viewBox_values[0]) + 150
+            let b = parseInt(viewBox_values[1]) + 150
+            let c = parseInt(viewBox_values[2]) - 300
+            let d = parseInt(viewBox_values[3]) - 300
             if(c && d >= 500) {
               svg_dom.attr("viewBox",`${a}, ${b}, ${c}, ${d}`)
             }
