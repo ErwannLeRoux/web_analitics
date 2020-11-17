@@ -62,7 +62,7 @@ $(document).ready(function() {
               .on("mouseover", function(d) {
                 $(".infos").text(JSON.stringify(d))
               })
-              .call(drag(simulation));
+              //.call(drag(simulation));
 
         node.append("circle")
             .attr("stroke", "white")
@@ -85,9 +85,53 @@ $(document).ready(function() {
 
         let svg_dom = $("svg")
 
+        let isDragging = false
+        let x = 0
+        let y = 0
+
+        $(".figure").mousedown(function(e) {
+            isDragging = true
+            x = e.clientX
+            y = e.clientY
+        })
+        .mousemove(function(e) {
+            if(isDragging) {
+              vx = x - e.clientX
+              vy = y - e.clientY
+
+              let viewBox_values = svg_dom.attr("viewBox").split(",")
+              let a = parseInt(viewBox_values[0]) + vx
+              let b = parseInt(viewBox_values[1]) + vy
+              let c = parseInt(viewBox_values[2])
+              let d = parseInt(viewBox_values[3])
+
+              svg_dom.attr("viewBox",`${a}, ${b}, ${c}, ${d}`)
+            }
+         })
+        .mouseup(function() {
+            let wasDragging = isDragging
+            isDragging = false
+            if (!wasDragging) {
+                console.log("fini !")
+            }
+        })
+
         svg_dom.bind('mousewheel DOMMouseScroll', function(event)
         {
           let viewBox_values = svg_dom.attr("viewBox").split(",")
+
+          let eventX = event.originalEvent.x
+          let eventY = event.originalEvent.y
+
+          if(eventX < 300 && eventY < 300) {
+            console.log("top left x: "+eventX+" y: "+eventY)
+          } else if(eventX >= 300 && eventY >= 300) {
+            console.log("bottom right x: "+eventX+" y: "+eventY)
+          } else if(eventX < 300 && eventY > 300) {
+            console.log("top right x: "+eventX+" y: "+eventY)
+          } else if(eventX >= 300 && eventY < 300) {
+            console.log("bottom left x: "+eventX+" y: "+eventY)
+          }
 
           if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
             // scroll up
@@ -112,8 +156,6 @@ $(document).ready(function() {
           }
 
         })
-
-
 
 
     }).catch(console.error)

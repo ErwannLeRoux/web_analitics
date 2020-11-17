@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, jsonify
 import requests
+from networkx.algorithms import community
 from flask import request
 import json
 import os
@@ -19,6 +20,30 @@ def index():
 
 @app.route('/graph/<graph_id>', methods=["GET"])
 def load_graph(graph_id):
+    graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+graph_id+"\\gml_file.gml", label=None)
+    k = 2
+
+    """
+    girvan = community.girvan_newman(graph)
+    clustering = None
+    for communities in girvan:
+        if(len(communities) == k):
+            clustering = communities
+            print(clustering)
+            break;
+
+    for clust in clustering:
+        clust = list(clust)
+        subgraph = graph.subgraph(clust)
+        print("\nIntra densité\n")
+        print(getNetworkDensity(subgraph))
+        print("\nInter densité\n")
+        print(getInterDensity(subgraph, graph))
+        print("\nMost important Node\n")
+        print(getMostImportantNode(subgraph))
+
+    print("\nXIII\n")
+    """
     return render_template('graph_display.html', data=graph_id)
 
 
@@ -111,6 +136,24 @@ def getNetworkAvgPathLength(g):
             for C in (g.subgraph(comp).copy()):
                 tab_average_shortest_path_length = nx.average_shortest_path_length(C)
         return np.mean(tab_average_shortest_path_length)
+
+def getInterDensity(subgraph, graph):
+    nb_inter=0
+    nbc=len(subgraph.nodes)
+    nb = len(graph.nodes)
+    for edge in graph.edges:
+        if((edge[0] in list(subgraph.nodes) and edge[1] not in list(subgraph.nodes)) or (edge[1] in list(subgraph.nodes) and edge[0] not in list(subgraph.nodes))):
+            nb_inter+=1
+    return nb_inter/(nbc*(nb-nbc))
+
+def getMostImportantNode(subgraph):
+    max = 0
+    max_id = 0
+    for couple in subgraph.degree:
+        if(couple[1] > max):
+            max = couple[1]
+            max_id = couple[0]
+    return max_id
 
 def getOutDegree(g):
     res=[]
