@@ -1,0 +1,44 @@
+html {
+  background-size: cover;
+  background-image: url('../pictures/background-graphs.jpg');
+}
+
+body, main, html {
+  height: 100%;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.graph-loading, .graph-form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.graph-form > input {
+  margin-bottom: 1em;
+}
+
+.graph-loading, .graph-list {
+  color: white;
+  background-color: #4DB7AD;
+  width: 600px;
+  text-align: center;
+  border: 1px solid black;
+  padding: 1em 0 1em 0;
+  margin: 1em 0 1em 0;
+  border-radius: 10px;
+}
+
+.graph-list ul {
+  padding-left: 0px;
+}
+
+.graph-list li a {
+  text-decoration: none;
+}

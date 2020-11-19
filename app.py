@@ -22,30 +22,6 @@ def index():
 
 @app.route('/graph/<graph_id>', methods=["GET"])
 def load_graph(graph_id):
-    graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+graph_id+"\\gml_file.gml", label=None)
-    k = 2
-
-    """
-    girvan = community.girvan_newman(graph)
-    clustering = None
-    for communities in girvan:
-        if(len(communities) == k):
-            clustering = communities
-            print(clustering)
-            break;
-
-    for clust in clustering:
-        clust = list(clust)
-        subgraph = graph.subgraph(clust)
-        print("\nIntra densité\n")
-        print(getNetworkDensity(subgraph))
-        print("\nInter densité\n")
-        print(getInterDensity(subgraph, graph))
-        print("\nMost important Node\n")
-        print(getMostImportantNode(subgraph))
-
-    print("\nXIII\n")
-    """
     return render_template('graph_display.html', data=graph_id)
 
 
@@ -136,32 +112,29 @@ def file_upload():
 
         ### Generating clusters ###
 
-        k = 9 #nb cluster
-
-        #Cluster set generation with Girman Newman Algo:
+        # Cluster set generation with Girman Newman algorithm:
         clusteringSet = community.girvan_newman(graph)
 
-        setsInfos = {
 
-            "sets" :[]
-        }
-
-        #For each set construct the json file.
+        # For each set construct the json file.
         setId = 2
         performance = 0
+
         k = 0
+
         for set in clusteringSet:
             performanceSet = community.quality.performance(graph,list(set))
             if performanceSet > performance:
                 performance = performanceSet
                 print("increasing k = "+str(k)+" - "+str(performance))
             else:
-                print("decreasing k = "+str(k)+" - "+str(performance))
+                print("Final iteration because equals or decreasing : "+str(performance))
+                break;
 
             k = k + 1
-            print("\n##########################################\n")
 
             clustersInfo = {
+                "performance": performance,
                 "nb_clust" : setId,
                 "clusters" : [],
             }
@@ -196,16 +169,13 @@ def file_upload():
                             'out_degree': out_degree[id],
                         })
                 clustId += 1
-            setsInfos["sets"].append(clustersInfo)
-
-            """
-            with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes_"+str(setId)+".json", 'w') as outfile:
-                json.dump(clustFile, outfile)
             setId += 1
-            """
+
+        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes.json", 'w') as outfile:
+            json.dump(clustFile, outfile)
 
         with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\clusters_info.json", 'w') as outfile:
-            json.dump(setsInfos, outfile)
+            json.dump(clustersInfo, outfile)
 
         return redirect("/graph/"+dir_name, code=200)
 

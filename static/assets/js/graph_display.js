@@ -6,7 +6,8 @@ $(document).ready(function() {
 
     let general_informations = d3.json(`/static/ressources/${graph_id}/graph_info.json`)
     let edges_loading= d3.json(`/static/ressources/${graph_id}/graph_edges.json`)
-    let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes_2.json`)
+    let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes.json`)
+    let clusters_loading = d3.json(`/static/ressources/${graph_id}/clusters_info.json`)
 
     general_informations.then(function(data) {
       $(".nbNodes").text(`Number of nodes : ${data.nb_nodes}`)
@@ -15,11 +16,18 @@ $(document).ready(function() {
       $(".averagePathLength").text(`Average path length : ${data.avg_path_lenght}`)
     })
 
-    Promise.all([edges_loading, nodes_loading]).then((data) => {
+    Promise.all([edges_loading, nodes_loading, clusters_loading]).then((data) => {
         let links = data[0]
         let nodes = data[1]
         let types = Array.from(new Set(links.map(d => d.type)))
         let color = d3.scaleOrdinal(types, d3.schemeCategory10)
+
+
+        let str = `
+          <li>Performance : ${data[2].performance}</li>
+        `;
+
+        $(".infos-clusters").find("ul").html(str)
 
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id))
@@ -60,13 +68,17 @@ $(document).ready(function() {
                 }
             })
             .on("mouseover", function(d) {
-              $(".infos-edges").find("span").text(JSON.stringify(d))
+              let str = `
+                <li>Source node id : ${d.source.id}</li>
+                <li>Target node id : ${d.target.id}</li>
+              `;
+              $(".infos-edges").find("ul").html(str)
             })
             .on("mouseleave", function(d) {
-              $(".infos-edges").find("span").text("")
+              //$(".infos-edges").find("ul").html("")
             })
-            // used for oriented graphs
             //.attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`);
+            // used for oriented graphs
 
         const node = svg.append("g")
             .attr("fill", "currentColor")
@@ -77,10 +89,37 @@ $(document).ready(function() {
             .data(nodes)
             .join("g")
               .on("mouseover", function(d) {
-                $(".infos").find("span").text(JSON.stringify(d))
+                /* Displaying node informations */
+                let str = `
+                  <li>Id : ${d.id}</li>
+                  <li>Name : ${d.nom}</li>
+                  <li>Cluster : ${d.cluster}</li>
+                  <li>Degree centrality : ${d.degree_centrality}</li>
+                  <li>Betweenness_centrality : ${d.betweenness_centrality}</li>
+                  <li>Closeness centrality : ${d.closeness_centrality}</li>
+                  <li>In-Degree : ${d.in_degree}</li>
+                  <li>Out-Degree : ${d.out_degree}</li>
+                `;
+                $(".nodes-infos").find("ul").html(str)
+
+
+                /* Displaying cluster informations */
+                let actualCluster = data[2].clusters.find((c) => {
+                  return c.id == d.cluster
+                })
+                console.log(actualCluster)
+
+                let str2 = `
+                  <li>Performance : ${data[2].performance}</li>
+                  <li>Id : ${actualCluster.id}</li>
+                  <li>Inter-density : ${actualCluster["inter-density"]}</li>
+                  <li>Intra-density : ${actualCluster["intra-density"]}</li>
+                  <li>Most important node : ${actualCluster["most-important-node"]}</li>
+                `;
+                $(".infos-clusters").find("ul").html(str2)
               })
               .on("mouseleave", function(d) {
-                $(".infos").find("span").text("")
+                $(".infos").find("ul").html("")
               })
               //.call(drag(simulation));
 
@@ -204,4 +243,3 @@ $(document).ready(function() {
             .on("end", dragended);
     }
 });
-

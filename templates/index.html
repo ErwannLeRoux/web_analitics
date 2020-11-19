@@ -7,17 +7,23 @@
   </head>
   <body>
   <main>
-    <form class="dropzone" enctype="multipart/form-data" action="upload_file" method="post">
-      <input type="file" name="file_field">
-      <input type="submit" name="submit_form">
-    </form>
-    <ul>
-      {% for item in data.list %}
-        <li>
-          <a href="graph/{{ item }}">{{ item }}</a>
-        </li>
-      {% endfor %}
-    </ul>
+    <div class="graph-loading">
+      <h2>Charger un nouveau graphe</h2>
+      <form class="graph-form" enctype="multipart/form-data" action="upload_file" method="post">
+        <input type="file" name="file_field">
+        <input type="submit" name="submit_form" value="Charger le graphe">
+      </form>
+    </div>
+    <div class="graph-list">
+      <h2>Liste des graphes</h2>
+      <ul>
+        {% for item in data.list %}
+          <li>
+          <a href="graph/{{ item }}">Graphe n°{{loop.index}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </main>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js" type="text/javascript"></script>
