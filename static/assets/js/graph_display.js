@@ -52,10 +52,13 @@ $(document).ready(function() {
             .selectAll("path")
             .data(links)
             .join("path")
-            .attr("class", function(d) {
-              //console.log(d)
+            .attr("stroke", function(d) {
+                if(d.source.cluster === d.target.cluster) {
+                    return color(d.source.cluster)
+                } else {
+                    return "#585049"
+                }
             })
-            .attr("stroke", d => color(d.type))
             .on("mouseover", function(d) {
               $(".infos-edges").find("span").text(JSON.stringify(d))
             })
@@ -90,7 +93,10 @@ $(document).ready(function() {
         node.append("text")
             .attr("x", 8)
             .attr("y", "0.31em")
-            .text(d => d.id)
+            .text(function(d) {
+                if(d.nom) return d.nom
+                return d.id
+            })
             .clone(true).lower()
             .attr("fill", "none")
             .attr("stroke", "white")
@@ -119,8 +125,8 @@ $(document).ready(function() {
               vy = y - e.clientY
 
               let viewBox_values = svg_dom.attr("viewBox").split(",")
-              let a = parseInt(viewBox_values[0]) + vx
-              let b = parseInt(viewBox_values[1]) + vy
+              let a = parseInt(viewBox_values[0]) + (vx / 10)
+              let b = parseInt(viewBox_values[1]) + (vy / 10)
               let c = parseInt(viewBox_values[2])
               let d = parseInt(viewBox_values[3])
 
@@ -138,19 +144,6 @@ $(document).ready(function() {
         svg_dom.bind('mousewheel DOMMouseScroll', function(event)
         {
           let viewBox_values = svg_dom.attr("viewBox").split(",")
-
-          let eventX = event.originalEvent.x
-          let eventY = event.originalEvent.y
-
-          if(eventX < 300 && eventY < 300) {
-            console.log("top left x: "+eventX+" y: "+eventY)
-          } else if(eventX >= 300 && eventY >= 300) {
-            console.log("bottom right x: "+eventX+" y: "+eventY)
-          } else if(eventX < 300 && eventY > 300) {
-            console.log("top right x: "+eventX+" y: "+eventY)
-          } else if(eventX >= 300 && eventY < 300) {
-            console.log("bottom left x: "+eventX+" y: "+eventY)
-          }
 
           if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
             // scroll up
@@ -210,14 +203,5 @@ $(document).ready(function() {
             .on("drag", dragged)
             .on("end", dragended);
     }
-
-    $("#gmlFile").on("change", function(e) {
-        console.log(e.target.files[0])
-    })
-
-
 });
 
-function gmlToJson() {
-
-}

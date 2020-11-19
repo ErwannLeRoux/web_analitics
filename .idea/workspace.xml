@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76755870-a01e-44e8-8a36-ede6e1918364" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/assets/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/assets/js/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/assets/js/graph_display.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/assets/js/graph_display.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,14 +26,14 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static\assets\css" />
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\templates" />
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static\assets\js" />
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\ressources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -49,7 +48,8 @@
       <updated>1605196649735</updated>
       <workItem from="1605196650807" duration="1945000" />
       <workItem from="1605198608953" duration="3977000" />
-      <workItem from="1605203465348" duration="40000" />
+      <workItem from="1605203465348" duration="169000" />
+      <workItem from="1605700575828" duration="4693000" />
     </task>
     <servers />
   </component>
