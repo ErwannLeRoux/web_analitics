@@ -136,19 +136,31 @@ def file_upload():
 
         ### Generating clusters ###
 
-        k = 4 #nb cluster
+        k = 9 #nb cluster
 
         #Cluster set generation with Girman Newman Algo:
-        clusteringSet, perf = girvanNewman(graph,k)
+        clusteringSet = community.girvan_newman(graph)
 
         setsInfos = {
-            "girvan_newman_perf" : perf,
+
             "sets" :[]
         }
 
         #For each set construct the json file.
         setId = 2
+        performance = 0
+        k = 0
         for set in clusteringSet:
+            performanceSet = community.quality.performance(graph,list(set))
+            if performanceSet > performance:
+                performance = performanceSet
+                print("increasing k = "+str(k)+" - "+str(performance))
+            else:
+                print("decreasing k = "+str(k)+" - "+str(performance))
+
+            k = k + 1
+            print("\n##########################################\n")
+
             clustersInfo = {
                 "nb_clust" : setId,
                 "clusters" : [],
@@ -186,12 +198,14 @@ def file_upload():
                 clustId += 1
             setsInfos["sets"].append(clustersInfo)
 
+            """
             with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes_"+str(setId)+".json", 'w') as outfile:
                 json.dump(clustFile, outfile)
             setId += 1
+            """
 
-            with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\clusters_info.json", 'w') as outfile:
-                json.dump(setsInfos, outfile)
+        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\clusters_info.json", 'w') as outfile:
+            json.dump(setsInfos, outfile)
 
         return redirect("/graph/"+dir_name, code=200)
 

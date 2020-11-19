@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     let general_informations = d3.json(`/static/ressources/${graph_id}/graph_info.json`)
     let edges_loading= d3.json(`/static/ressources/${graph_id}/graph_edges.json`)
-    let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes_5.json`)
+    let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes_2.json`)
 
     general_informations.then(function(data) {
       $(".nbNodes").text(`Number of nodes : ${data.nb_nodes}`)

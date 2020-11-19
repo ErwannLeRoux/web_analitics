@@ -3,7 +3,36 @@
   <component name="ChangeListManager">
     <list default="true" id="76755870-a01e-44e8-8a36-ede6e1918364" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/assets/js/graph_display.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/assets/js/graph_display.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/clusters_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/gml_file.gml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/graph_edges.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/graph_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/graph_nodes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/graph_nodes_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/graph_nodes_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/graph_nodes_4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/07e0cd799a23461d82ced55bc59cddaf/graph_nodes_5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/clusters_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/gml_file.gml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/graph_edges.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/graph_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/graph_nodes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/graph_nodes_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/graph_nodes_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/graph_nodes_4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/1beaf9a438e04a0d84e4f9f4fe69fd70/graph_nodes_5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/clusters_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/gml_file.gml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/graph_edges.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/graph_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/graph_nodes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/graph_nodes_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/graph_nodes_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/graph_nodes_4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/840c58a21ec341bb82719e1ebd568389/graph_nodes_5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,14 +55,17 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Erwann\Desktop\Web_Analitique\static\assets\css" />
+      <recent name="C:\Users\Erwann\Desktop\Web_Analitique\static\assets\js" />
+      <recent name="C:\Users\Erwann\Desktop\Web_Analitique\static\assets\js\dropzone-5.7.0" />
+      <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static\assets\css" />
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\templates" />
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static\assets\js" />
       <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\ressources" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Erwann\Desktop\Novhah-knowledge-acquisation-497c0130ba74\static" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -50,10 +82,18 @@
       <workItem from="1605198608953" duration="3977000" />
       <workItem from="1605203465348" duration="169000" />
       <workItem from="1605700575828" duration="4693000" />
+      <workItem from="1605770210671" duration="2141000" />
+      <workItem from="1605788698183" duration="7188000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="946" y="287" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1605770349079">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="946" y="287" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080@0.0.1920.1080" timestamp="1605770349079" />
   </component>
 </project>
