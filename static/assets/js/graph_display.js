@@ -107,10 +107,10 @@ $(document).ready(function() {
                 let actualCluster = data[2].clusters.find((c) => {
                   return c.id == d.cluster
                 })
-                console.log(actualCluster)
 
                 let str2 = `
                   <li>Performance : ${data[2].performance}</li>
+                  <li>Iterations : ${data[2]["iteration_number"]}</li>
                   <li>Id : ${actualCluster.id}</li>
                   <li>Inter-density : ${actualCluster["inter-density"]}</li>
                   <li>Intra-density : ${actualCluster["intra-density"]}</li>

@@ -129,15 +129,17 @@ def file_upload():
                 print("increasing k = "+str(k)+" - "+str(performance))
             else:
                 print("Final iteration because equals or decreasing : "+str(performance))
-                break;
+                break
 
             k = k + 1
 
             clustersInfo = {
                 "performance": performance,
+                "iteration_number": k,
                 "nb_clust" : setId,
                 "clusters" : [],
             }
+
 
             clustFile = [] # json vide
             clustId = 1 # set Id
