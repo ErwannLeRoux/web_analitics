@@ -24,9 +24,12 @@ main {
   margin-bottom: 1em;
 }
 
+.graph-loading h2, .graph-list h2 {
+  text-decoration: underline;
+}
+
 .graph-loading, .graph-list {
-  color: white;
-  background-color: #4DB7AD;
+  background-color: lightcyan;
   width: 600px;
   text-align: center;
   border: 1px solid black;

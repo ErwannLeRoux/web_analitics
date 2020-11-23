@@ -47,6 +47,8 @@ def file_upload():
             outfile.write(file_text)
 
         graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\gml_file.gml", label=None)
+        print(len(graph.nodes))
+        print(len(graph.edges))
 
         nodesFile = []
         edgesFile = []
@@ -75,23 +77,6 @@ def file_upload():
         # out_degree
         out_degree = getOutDegree(graph)
 
-        for i in range(0, len(graph.nodes)):
-            id = list(graph.nodes)[i]
-            try:
-                label = graph.nodes[i]['label']
-            except:
-                label = id
-
-            nodesFile.append({
-                'id': id,
-                'nom' : label,
-                'degree_centrality': degree_centrality[id],
-                'betweenness_centrality': betweenness_centrality[id],
-                'closeness_centrality': closeness_centrality[id],
-                'in_degree': in_degree[id],
-                'out_degree': out_degree[id],
-            })
-
         ### General informations about graph ###
 
         graphFile = {
@@ -103,9 +88,6 @@ def file_upload():
 
         with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_info.json", 'w') as outfile:
             json.dump(graphFile, outfile)
-
-        with open(os.getcwd()+"\\static\\ressources/"+dir_name+"\\graph_nodes.json", 'w') as outfile:
-            json.dump(nodesFile, outfile)
 
         with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_edges.json", 'w') as outfile:
             json.dump(edgesFile, outfile)
@@ -133,20 +115,19 @@ def file_upload():
 
             k = k + 1
 
-            clustersInfo = {
+            clustsFile = {
                 "performance": performance,
                 "iteration_number": k,
                 "nb_clust" : setId,
                 "clusters" : [],
             }
 
-
-            clustFile = [] # json vide
+            nodesFile = [] # json vide
             clustId = 1 # set Id
             #forEach cluster look graph node and add it if it's in the cluster.
             for cluster in set:
                 subgraph = graph.subgraph(list(cluster))
-                clustersInfo["clusters"].append({
+                clustsFile["clusters"].append({
                     "id" : clustId,
                     "intra-density" : getNetworkDensity(subgraph),
                     "inter-density" : getInterDensity(subgraph, graph),
@@ -160,7 +141,7 @@ def file_upload():
                     except:
                         label = id
                     if(id in list(subgraph.nodes)):
-                        clustFile.append({
+                        nodesFile.append({
                             'id': id,
                             'nom' : label,
                             'cluster' : clustId,
@@ -174,12 +155,12 @@ def file_upload():
             setId += 1
 
         with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes.json", 'w') as outfile:
-            json.dump(clustFile, outfile)
+            json.dump(nodesFile, outfile)
 
         with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\clusters_info.json", 'w') as outfile:
-            json.dump(clustersInfo, outfile)
+            json.dump(clustsFile, outfile)
 
-        return redirect("/graph/"+dir_name, code=200)
+        return redirect("/graph/"+dir_name)
 
 
 def getNbNodes(g):

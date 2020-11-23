@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    let height = 6000
-    let width = 6000
+    let height = 9000
+    let width = 9000
 
     let graph_id = window.location.pathname.split("/")[2]
 

@@ -4,12 +4,16 @@
     <list default="true" id="76755870-a01e-44e8-8a36-ede6e1918364" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/assets/css/graph_display.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/assets/css/graph_display.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/assets/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/assets/css/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/assets/js/graph_display.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/assets/js/graph_display.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/ressources/04b3036df6b344759952b997ffabe0d5/clusters_info.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/ressources/04b3036df6b344759952b997ffabe0d5/gml_file.gml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/ressources/04b3036df6b344759952b997ffabe0d5/graph_edges.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/ressources/04b3036df6b344759952b997ffabe0d5/graph_info.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/ressources/04b3036df6b344759952b997ffabe0d5/graph_nodes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/a5ee59d1a7134c87a0e1cf6195f38d65/clusters_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/a5ee59d1a7134c87a0e1cf6195f38d65/gml_file.gml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/a5ee59d1a7134c87a0e1cf6195f38d65/graph_edges.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/a5ee59d1a7134c87a0e1cf6195f38d65/graph_info.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/ressources/a5ee59d1a7134c87a0e1cf6195f38d65/graph_nodes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/graph_display.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/graph_display.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +66,7 @@
       <workItem from="1605770210671" duration="2141000" />
       <workItem from="1605788698183" duration="7188000" />
       <workItem from="1606135827513" duration="616000" />
-      <workItem from="1606136459540" duration="842000" />
+      <workItem from="1606136459540" duration="5559000" />
     </task>
     <servers />
   </component>
