@@ -34,7 +34,7 @@ def file_upload():
         file_text = f.read().decode("utf-8")
 
         dir_name = str(uuid.uuid4().hex)
-        path = os.getcwd()+"\\static\\ressources\\"+dir_name
+        path = os.getcwd()+"/static/ressources/"+dir_name
         try:
             os.makedirs(path)
         except OSError:
@@ -43,12 +43,15 @@ def file_upload():
             print ("Successfully created the directory %s" % path)
 
         # store gml file
-        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\gml_file.gml", 'w') as outfile:
+        with open(os.getcwd()+"/static/ressources/"+dir_name+"/gml_file.gml", 'w') as outfile:
             outfile.write(file_text)
 
-        graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\gml_file.gml", label=None)
+        graph = nx.read_gml(os.getcwd()+"/static/ressources/"+dir_name+"/gml_file.gml", label=None)
+           
+        if(len(list(graph.nodes)) >= 5000):
+            graph = graph.subgraph(list(graph.nodes)[0:5000])
+            
 
-        nodesFile = []
         edgesFile = []
 
         ### Informations and computing relative to edges ###
@@ -75,23 +78,7 @@ def file_upload():
         # out_degree
         out_degree = getOutDegree(graph)
 
-        for i in range(0, len(graph.nodes)):
-            id = list(graph.nodes)[i]
-            try:
-                label = graph.nodes[i]['label']
-            except:
-                label = id
-
-            nodesFile.append({
-                'id': id,
-                'nom' : label,
-                'degree_centrality': degree_centrality[id],
-                'betweenness_centrality': betweenness_centrality[id],
-                'closeness_centrality': closeness_centrality[id],
-                'in_degree': in_degree[id],
-                'out_degree': out_degree[id],
-            })
-
+        
         ### General informations about graph ###
 
         graphFile = {
@@ -101,13 +88,11 @@ def file_upload():
             "avg_path_lenght" : getNetworkAvgPathLength(graph)
         }
 
-        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_info.json", 'w') as outfile:
+        with open(os.getcwd()+"/static/ressources/"+dir_name+"/graph_info.json", 'w') as outfile:
             json.dump(graphFile, outfile)
 
-        with open(os.getcwd()+"\\static\\ressources/"+dir_name+"\\graph_nodes.json", 'w') as outfile:
-            json.dump(nodesFile, outfile)
 
-        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_edges.json", 'w') as outfile:
+        with open(os.getcwd()+"/static/ressources/"+dir_name+"/graph_edges.json", 'w') as outfile:
             json.dump(edgesFile, outfile)
 
         ### Generating clusters ###
@@ -117,7 +102,6 @@ def file_upload():
 
 
         # For each set construct the json file.
-        setId = 2
         performance = 0
 
         k = 0
@@ -129,53 +113,71 @@ def file_upload():
                 print("increasing k = "+str(k)+" - "+str(performance))
             else:
                 print("Final iteration because equals or decreasing : "+str(performance))
+                selectedSet = set
                 break;
 
             k = k + 1
+            
+        nb_clust = len(selectedSet)
+        nb_inters = 0
+        nb_intras = 0 
 
-            clustersInfo = {
-                "performance": performance,
-                "nb_clust" : setId,
-                "clusters" : [],
-            }
+        clustsFile = {
+            "performance": performance,
+            "nb_clust" : nb_clust,
+            "clusters" : [],
+        }
 
-            clustFile = [] # json vide
-            clustId = 1 # set Id
-            #forEach cluster look graph node and add it if it's in the cluster.
-            for cluster in set:
-                subgraph = graph.subgraph(list(cluster))
-                clustersInfo["clusters"].append({
-                    "id" : clustId,
-                    "intra-density" : getNetworkDensity(subgraph),
-                    "inter-density" : getInterDensity(subgraph, graph),
-                    "most-important-node" : getMostImportantNode(subgraph)
-                })
+        nodesFile = [] # json vide
+        clustId = 1 # set Id
+        
+        #forEach cluster look graph node and add it if it's in the cluster.
+        for cluster in set:
+            subgraph = graph.subgraph(list(cluster))
+            nb_nodes_cls = len(list(subgraph.nodes))
+            nb_intras_cls = len(list(subgraph.edges))
+            nb_inter_cls = getNbInterEdges(subgraph,graph)
 
-                for i in range(0, len(graph.nodes)):
-                    id = list(graph.nodes)[i]
-                    try:
-                        label = graph.nodes[i]['label']
-                    except:
-                        label = id
-                    if(id in list(subgraph.nodes)):
-                        clustFile.append({
-                            'id': id,
-                            'nom' : label,
-                            'cluster' : clustId,
-                            'degree_centrality': degree_centrality[id],
-                            'betweenness_centrality': betweenness_centrality[id],
-                            'closeness_centrality': closeness_centrality[id],
-                            'in_degree': in_degree[id],
-                            'out_degree': out_degree[id],
-                        })
-                clustId += 1
-            setId += 1
+            nb_intras += nb_intras_cls
+            nb_inters += nb_inter_cls
 
-        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\graph_nodes.json", 'w') as outfile:
-            json.dump(clustFile, outfile)
+            clustsFile["mean_nb_intra"] = nb_intras/nb_clust
+            clustsFile["mean_nb_inters"] = nb_inters/nb_clust
 
-        with open(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\clusters_info.json", 'w') as outfile:
-            json.dump(clustersInfo, outfile)
+            clustsFile["clusters"].append({
+                "id" : clustId,
+                "nb_nodes" : nb_nodes_cls,
+                "nb_intra_edges" : nb_intras_cls,
+                "nb_inter_edges" : nb_inter_cls,
+                "intra-density" : getNetworkDensity(subgraph),
+                "inter-density" : getInterDensity(subgraph, graph),
+                "most-important-node" : getMostImportantNode(subgraph)
+            })
+
+            for i in range(0, len(graph.nodes)):
+                id = list(graph.nodes)[i]
+                try:
+                    label = graph.nodes[i]['label']
+                except:
+                    label = id
+                if(id in list(subgraph.nodes)):
+                    nodesFile.append({
+                        'id': id,
+                        'nom' : label,
+                        'cluster' : clustId,
+                        'degree_centrality': degree_centrality[id],
+                        'betweenness_centrality': betweenness_centrality[id],
+                        'closeness_centrality': closeness_centrality[id],
+                        'in_degree': in_degree[id],
+                        'out_degree': out_degree[id],
+                    })
+            clustId += 1
+
+        with open(os.getcwd()+"/static/ressources/"+dir_name+"/graph_nodes.json", 'w') as outfile:
+            json.dump(nodesFile, outfile)
+
+        with open(os.getcwd()+"/static/ressources/"+dir_name+"/clusters_info.json", 'w') as outfile:
+            json.dump(clustsFile, outfile)
 
         return redirect("/graph/"+dir_name, code=200)
 
@@ -271,6 +273,20 @@ def getMostImportantNode(subgraph):
             max_id = couple[0]
     return max_id
 
+def getNbInterEdges(subgraph,graph):
+    res = 0
+   
+    nodes_cls = list(subgraph.nodes)
+    edges_cls = list(subgraph.edges)
+
+    for edge in list(graph.edges):
+        if(
+            ((edge[0] in nodes_cls) and (edge[1] not in nodes_cls)) 
+            or
+            ((edge[0] not in nodes_cls) and (edge[1] in nodes_cls))
+        ):
+            res+=1
+    return res
 
 
 if __name__ == "__main__":
