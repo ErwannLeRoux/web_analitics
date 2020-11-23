@@ -17,6 +17,8 @@ $(document).ready(function() {
     })
 
     Promise.all([edges_loading, nodes_loading, clusters_loading]).then((data) => {
+        let edgesInClusters = 0
+        let edgesOutClusters = 0
         let links = data[0]
         let nodes = data[1]
         let types = Array.from(new Set(links.map(d => d.type)))
@@ -55,6 +57,7 @@ $(document).ready(function() {
             .attr("d", "M0,-5L10,0L0,5");
 
         const link = svg.append("g")
+            .attr("class", "cursor")
             .attr("fill", "none")
             .attr("stroke-width", 1.5)
             .selectAll("path")
@@ -62,8 +65,10 @@ $(document).ready(function() {
             .join("path")
             .attr("stroke", function(d) {
                 if(d.source.cluster === d.target.cluster) {
+                    edgesInClusters++
                     return color(d.source.cluster)
                 } else {
+                    edgesOutClusters++
                     return "#585049"
                 }
             })
@@ -208,7 +213,8 @@ $(document).ready(function() {
 
         })
 
-
+        console.log(edgesInClusters)
+        console.log(edgesOutClusters)
     }).catch(console.error)
 
     function linkArc(d) {
