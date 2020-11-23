@@ -31,6 +31,17 @@ $(document).ready(function() {
 
         $(".infos-clusters").find("ul").html(str)
 
+        let strGeneralCluster = `
+            <li>Nombre de clusters : ${data[2].nb_clust}</li>
+            <li>Performance : ${data[2].performance}</li>
+            <li>Girvan-Newman Iterations : ${data[2]["iteration_number"]}</li>
+            <li>Nombre moyen de lien intra-clusters : ${data[2].mean_nb_intra}</li>
+            <li>Nombre moyen de lien inter-clusters : ${data[2].mean_nb_inters}</li>
+        `;
+
+        $(".general-infos-clusters").find("ul").html(strGeneralCluster)
+
+
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id))
             .force("charge", d3.forceManyBody().strength(-400))
@@ -114,14 +125,12 @@ $(document).ready(function() {
                 })
 
                 let str2 = `
-                  <li>Performance : ${data[2].performance}</li>
-                  <li>Iterations : ${data[2]["iteration_number"]}</li>
                   <li>Id : ${actualCluster.id}</li>
                   <li>Inter-density : ${actualCluster["inter-density"]}</li>
                   <li>Intra-density : ${actualCluster["intra-density"]}</li>
                   <li>Most important node : ${actualCluster["most-important-node"]}</li>
                 `;
-                $(".infos-clusters").find("ul").html(str2)
+                $(".infos-cluster").find("ul").html(str2)
               })
               .on("mouseleave", function(d) {
                 $(".infos").find("ul").html("")
