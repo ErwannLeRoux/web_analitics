@@ -9,38 +9,57 @@ $(document).ready(function() {
     let nodes_loading = d3.json(`/static/ressources/${graph_id}/graph_nodes.json`)
     let clusters_loading = d3.json(`/static/ressources/${graph_id}/clusters_info.json`)
 
-    general_informations.then(function(data) {
-      $(".nbNodes").text(`Number of nodes : ${data.nb_nodes}`)
-      $(".nbEdges").text(`Number of edges : ${data.nb_edges}`)
-      $(".graphDensity").text(`Graph density : ${data.density}`)
-      $(".averagePathLength").text(`Average path length : ${data.avg_path_lenght}`)
-    })
-
-    Promise.all([edges_loading, nodes_loading, clusters_loading]).then((data) => {
+    Promise.all([edges_loading, nodes_loading, clusters_loading, general_informations]).then((data) => {
         let edgesInClusters = 0
         let edgesOutClusters = 0
         let links = data[0]
         let nodes = data[1]
+        let generalInfo = data[3]
         let types = Array.from(new Set(links.map(d => d.type)))
         let color = d3.scaleOrdinal(types, d3.schemeCategory10)
 
+        // Highest betweeness
+        nodes.sort(function(nodeA, nodeB) {
+            return nodeB["betweenness_centrality"] - nodeA["betweenness_centrality"];
+        });
 
-        let str = `
-          <li>Performance : ${data[2].performance}</li>
-        `;
+        let maxBetweeness = nodes[0];
 
-        $(".infos-clusters").find("ul").html(str)
+        // Highest closeness
+        nodes.sort(function(nodeA, nodeB) {
+            return nodeB["closeness_centrality"] - nodeA["closeness_centrality"];
+        });
+
+        let maxCloseness = nodes[0];
+
+        // Degree centrality
+        nodes.sort(function(nodeA, nodeB) {
+            return nodeB["degree_centrality"] - nodeA["degree_centrality"];
+        });
+
+        let maxDegree = nodes[0];
 
         let strGeneralCluster = `
-            <li>Nombre de clusters : ${data[2].nb_clust}</li>
+            <li>Number of clusters : ${data[2].nb_clust}</li>
             <li>Performance : ${data[2].performance}</li>
             <li>Girvan-Newman Iterations : ${data[2]["iteration_number"]}</li>
-            <li>Nombre moyen de lien intra-clusters : ${data[2].mean_nb_intra}</li>
-            <li>Nombre moyen de lien inter-clusters : ${data[2].mean_nb_inters}</li>
+            <li>Average intra-clusters links : ${data[2].mean_nb_intra}</li>
+            <li>Average inter-clusters links : ${data[2].mean_nb_inters}</li>
         `;
 
         $(".general-infos-clusters").find("ul").html(strGeneralCluster)
 
+        let str = `
+            <li>Number of nodes : ${generalInfo.nb_nodes}</li>
+            <li>Number of edges : ${generalInfo.nb_edges}</li>
+            <li>Graph density : ${generalInfo.density}</li>
+            <li>Average path length :  ${generalInfo.avg_path_lenght}</li>
+            <li>Node with max degree : ${maxDegree.nom}</li>
+            <li>Node with max closeness : ${maxCloseness.nom}</li>
+            <li>Node with max betweeness : ${maxBetweeness.nom}</li>
+        `;
+
+        $(".graph-infos").find("ul").html(str)
 
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id))
@@ -84,14 +103,32 @@ $(document).ready(function() {
                 }
             })
             .on("mouseover", function(d) {
+                /* Displaying cluster informations */
+                let actualCluster = data[2].clusters.find((c) => {
+                    if(d.source.cluster == d.target.cluster) {
+                        return c.id == d.source.cluster
+                    }
+                })
+
+                if(actualCluster) {
+                    let str2 = `
+                  <li>Id : ${actualCluster.id}</li>
+                  <li>Inter-density : ${actualCluster["inter-density"]}</li>
+                  <li>Intra-density : ${actualCluster["intra-density"]}</li>
+                  <li>Most important node : ${actualCluster["most-important-node"]}</li>
+                `;
+
+                    $(".infos-cluster").find("ul").html(str2)
+                }
               let str = `
                 <li>Source node id : ${d.source.id}</li>
                 <li>Target node id : ${d.target.id}</li>
+                <li>Edges betweeness: ${d.edges_betweenness}</li>
               `;
               $(".infos-edges").find("ul").html(str)
             })
             .on("mouseleave", function(d) {
-              //$(".infos-edges").find("ul").html("")
+              $(".infos-edges").find("ul").html("")
             })
             //.attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`);
             // used for oriented graphs
@@ -133,7 +170,8 @@ $(document).ready(function() {
                 $(".infos-cluster").find("ul").html(str2)
               })
               .on("mouseleave", function(d) {
-                $(".infos").find("ul").html("")
+                  $(".infos-cluster").find("ul").html("")
+                  $(".nodes-infos").find("ul").html("")
               })
               //.call(drag(simulation));
 

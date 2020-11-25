@@ -48,8 +48,8 @@ def file_upload():
 
         graph = nx.read_gml(os.getcwd()+"\\static\\ressources\\"+dir_name+"\\gml_file.gml", label=None)
 
-        if(len(list(graph.nodes)) >= 5000):
-            graph = graph.subgraph(list(graph.nodes)[0:5000])
+        if(len(list(graph.nodes)) >= 2500):
+            graph = graph.subgraph(list(graph.nodes)[0:2500])
 
         edgesFile = []
 

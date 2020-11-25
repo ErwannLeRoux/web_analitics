@@ -65,3 +65,13 @@ body {
     background-color: #4CAF50;
     color: white;
 }
+
+.nodes-infos {
+    min-height: 200px;
+}
+
+.infos-edges {
+    min-height: 100px;
+}
+
+
